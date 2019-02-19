@@ -12,3 +12,7 @@ chmod 600 $ssh_dir/authorized_keys
 
 sudo -i -u ec2-user nvm install 8.15.0
 sudo -i -u ec2-user nvm alias default 8.15.0
+
+sudo -i -u ec2-user npm install -g create-flex-plugin
+
+echo 'alias publicip="curl http://169.254.169.254/latest/meta-data/public-ipv4; echo"' >> /home/ec2-user/.bashrc
