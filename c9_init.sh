@@ -24,7 +24,10 @@ cat ~/bootstrap/README.md > $home/environment/README.md
 
 # mount shared storage
 if [[ "$FS_ID" != "None" && ! -z "$FS_ID" && ! -z "$REGION" ]]; then
+  yum install -y amazon-efs-utils > /dev/null
   echo "Mounting shared storage..."
   mkdir $home/environment/shared
-  mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport $FS_ID.efs.$REGION.amazonaws.com:/ /home/ec2-user/environment/shared
+  chmod a=rwx,o+t $home/environment/shared
+  echo "$FS_ID:/ /home/ec2-user/environment/shared efs defaults,_netdev 0 0" >> /etc/fstab
+  mount $home/environment/shared
 fi
