@@ -1,7 +1,10 @@
 # Script to be run during C9 initialization
 date > /tmp/c9_init.log
+home=/home/ec2-user
+ssh_dir=$home/.ssh
+REGION=$1
+FS_ID=$2
 
-ssh_dir=/home/ec2-user/.ssh
 # add public key
 if [ ! -d $ssh_dir ]; then
   mkdir $ssh_dir
@@ -17,4 +20,11 @@ sudo -i -u ec2-user npm install -g create-flex-plugin
 
 echo 'alias publicip="curl http://169.254.169.254/latest/meta-data/public-ipv4; echo"' >> /home/ec2-user/.bashrc
 
-cat ~/bootstrap/README.md > /home/ec2-user/environment/README.md
+cat ~/bootstrap/README.md > $home/environment/README.md
+
+# mount shared storage
+if [[ "$FS_ID" != "None" && ! -z "$FS_ID" && ! -z "$REGION" ]]; then
+  echo "Mounting shared storage..."
+  mkdir $home/environment/shared
+  mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport $FS_ID.efs.$REGION.amazonaws.com:/ /home/ec2-user/environment/shared
+fi
