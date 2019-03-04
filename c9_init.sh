@@ -19,8 +19,10 @@ sudo -i -u ec2-user nvm alias default 8.15.0
 sudo -i -u ec2-user npm install -g create-flex-plugin
 sudo -i -u ec2-user npm install -g ngrok
 
+echo 'alias publichostname="curl http://169.254.169.254/latest/meta-data/public-hostname; echo"' >> /home/ec2-user/.bashrc
 echo 'alias publicip="curl http://169.254.169.254/latest/meta-data/public-ipv4; echo"' >> /home/ec2-user/.bashrc
 
+awk -v ip=`curl http://169.254.169.254/latest/meta-data/public-hostname; echo` '/Welcome to Twilio/ { print; print "\nYour public IP address: "ip; next }1' ~/bootstrap/README.md > $home/environment/README.md
 awk -v ip=`curl http://169.254.169.254/latest/meta-data/public-ipv4; echo` '/Welcome to Twilio/ { print; print "\nYour public IP address: "ip; next }1' ~/bootstrap/README.md > $home/environment/README.md
 
 # mount shared storage
